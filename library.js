@@ -82,7 +82,7 @@ function processbutton(button) {
 
 function subscribe(hostname, port, username, password, topic, onconnect, onmessagearrived) {
     // Create a client instance
-    var clientname = "client" + String(Math.round(Math.random() * 10));
+    var clientname = "client" + String(Math.round(Math.random() * 1024));
     var client = new Paho.MQTT.Client(hostname, port, clientname);
     // set callback handlers
     client.onConnectionLost = onConnectionLost;

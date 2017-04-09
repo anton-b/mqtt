@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+        <script src="library.js" language="javascript"></script>
+
+        <div id="lg" onclick="changelight('toggle')">TODO write content</div>
+        <div id="log"> 
+        Log:
+        </div>
+        <script language="javascript">
+            function ctrlonma(message)
+            {
+                msg = message.payloadString
+                log("Got control message " + msg)
+                changelight(msg)
+            }
+            
+            function changelight(command)
+            {
+                switch (command){
+                    case "on":
+                        light = "on"
+                        sendmessage(statusclient, "stat/sonofflight1/power", "on")
+                        log("light is on")
+                        break
+                    case "off":
+                        light = "off"
+                        sendmessage(statusclient, "stat/sonofflight1/power", "off")
+                        log("light is off")
+                        break
+                    case "toggle":
+                        if (typeof light == "undefined" || light == "off")
+                        {
+                            light = "on"
+                            sendmessage(statusclient, "stat/sonofflight1/power", "on")
+                            log("light is on")
+                        } else
+                        {
+                            light = "off"
+                            sendmessage(statusclient, "stat/sonofflight1/power", "off")
+                            log("light is off")
+                        }
+                }
+            }
+            statusclient = subscribe("localhost", 1883, "", "", "stat/sonofflight1/power", () => {log("Connected status")}, (m) => {log(m.payloadString)})
+            ctrlclient = subscribe("localhost", 1883, "", "", "cmnd/sonofflight1/power", () => {log("Connected ctrl")}, ctrlonma)
+        </script>
+    </body>
+</html>
